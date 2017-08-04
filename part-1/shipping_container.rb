@@ -6,30 +6,28 @@ class ShippingContainer
     @destination = args.fetch(:destination)
     @max_weight = args.fetch(:max_weight)
     @max_crates = args.fetch(:max_crates)
-    @crates = args.fetch(:crates)
-    @max_weight = args.fetch(:max_weight)
+    @crates = args.fetch(:crates, [])
   end
 
   def current_weight
-    if crates.empty?
-      return 0
-    else
       crates.reduce(0) { |total_weight, crate| total_weight + crate.weight }
-    end
   end
 
   def crates_count
     crates.count
   end
 
+  def over_weight?(new_crate)
+    new_crate.weight + current_weight > max_weight
+  end
+
+  def over_max_amount?
+    crates.count + 1 > max_crates
+  end
+
   def add_crate(new_crate)
-    if new_crate.weight + current_weight > max_weight
-      return false
-    elsif crates_count == max_crates
-      return false
-    elsif current_weight < max_weight && crates_count < max_crates
-      crates << new_crate
-      return true
-    end
+    return false if over_weight?(new_crate) || over_max_amount?
+    crates << new_crate
+    true
   end
 end
