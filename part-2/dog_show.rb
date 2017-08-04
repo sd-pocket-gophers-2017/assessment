@@ -11,7 +11,8 @@ class DogShow
 
   def rankings
     # dogs.class => Array of instances of dog
-    dogs.sort_by{ |dog| self.calculator.points_for_dog(dog) }.reverse
+    # dogs.sort_by{ |dog| self.calculator.points_for_dog(dog) }.reverse
+    dogs.sort { |dog1, dog2| calculator.points_for_dog(dog2) <=> calculator.points_for_dog(dog1) }
     # dog_rankings.each do |dog|
     # dog_rankings = dogs.each do |dog|
       # puts "#{dog.name} #{self.calculator.points_for_dog(dog)}"
@@ -20,11 +21,11 @@ class DogShow
 
   def best_dogs
     # self.rankings.class => Array
-    self.rankings.first(self.rankings.count / 2)
+    rankings.first(rankings.count / 2)
   end
 
   def ranking_for(name)
-    self.rankings.find_index { |dog| dog.name == name } + 1
+    rankings.find_index { |dog| dog.name == name } + 1
   end
 
 end
